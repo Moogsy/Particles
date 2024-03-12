@@ -1,4 +1,7 @@
+#pragma once
+
 #include <array>
+#include <cmath>
 #include <iostream>
 
 template <std::size_t N>
@@ -28,6 +31,52 @@ public:
             ++provided;
             ++coord;
         }
+    }
+
+    /// @brief Squared euclidian norm of the current vector
+    double euclidianNormSquared() {
+        double dist = 0.0;
+        for (auto coord: this->coords) {
+            dist += coord * coord;
+        }
+        return dist;
+    };
+
+    /// @brief Euclidian norm of the current vector
+    inline double euclidianNorm() {
+        return std::sqrt(this->euclidianDistanceSquared());
+    }
+
+    /// @brief Squared Euclidian distance between two vectors
+    double euclidianDistanceSquared(const Vector<N> & v) const {
+        return (this - v).euclidianNormSquared();
+    }
+
+    /// @brief Euclidian distance between this vector and another one
+    inline double euclidianDistance(const Vector<N> & v) const {
+        return std::sqrt(this->euclidianDistanceSquared(v));
+    }
+    
+    /// @brief Normalizes this vector
+    void normalize() {
+        double norm = this->euclidianNorm();
+        if (norm == 0.0) {
+            throw std::invalid_argument("Cannot normalize a null vector");
+        } 
+        this /= this->euclidianNorm();
+    } 
+
+    /// @brief Sets all of this vector's coordinates to 0
+    void zero() {
+        for (auto &coord: this->coords) {
+            coord = 0;
+        }
+
+    }
+
+    /* Comparison operations */
+    bool operator==(const Vector<N> & v) const {
+        return this->coords == v.coords;
     }
 
     /// @return The size of the vector
@@ -71,6 +120,26 @@ public:
         return ret;
     }
 
+    /// @brief In place substraction of two same sized vectors
+    /// @param v  The vector to sub that one with
+    void operator-=(const Vector<N> & v) {
+        auto ours = this->coords.begin();
+        auto others = v.coords.begin();
+
+        while (ours != this->coords.end())
+        {
+            *ours -= *others;
+            ++ours;
+            ++others;
+        }
+    }
+
+    Vector<N> operator-(const Vector<N> & v) const {
+        Vector<N> ret(*this);
+        ret -= v;
+        return ret;
+    }
+
     /// @brief Inplace multiplication of a vector by a scalar
     /// @param x The scalar to multiply this vector with
     void operator*=(const double x) {
@@ -82,7 +151,7 @@ public:
     /// @brief Multiplication of a vector by a scalar
     /// @param x The scalar to multiply the resulting vector with
     Vector<N> operator*(const double x) const {
-        auto v = Vector(*this);
+        Vector<N> v(*this);
         v *= x;
         return v;
     }
@@ -109,3 +178,6 @@ public:
         return os;
     };
 };
+
+typedef Vector<2> Vector2D;
+typedef Vector<3> Vector3D;
