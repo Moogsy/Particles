@@ -3,14 +3,14 @@
 
 template <std::size_t N>
 class Particle {
-private:
+public:
     Vector<N> position;
     Vector<N> speed;
     Vector<N> force;
     double mass;
     std::string identifier;
     std::string category;
-public:
+
     Particle(
         std::string identifier,
         std::string category,
@@ -35,22 +35,31 @@ public:
         return this->force;
     }
 
+    Vector<N> & getSpeed() {
+        return this->speed;
+    }
+
     double & getMass() {
         return this->mass;
     }
 
-
     /* Operations */
     const bool operator==(const Particle<N> & p) const {
-        return (
-            this->position == p.position &&
-            this->speed == p.speed &&
-            this->force == p.force &&
-            this->mass == p.mass &&
-            this->identifier == p.identifier &&
-            this->category == p.category
-        );
+        return (this->identifier == p.identifier && this->category == p.category);
     }
+
+    friend std::ostream& operator<<(std::ostream &os, const Particle<N> &p) {
+        os << "Particle{";
+        os << "identifier=" << p.identifier;
+        os << ", " << "category=" << p.category;
+        os << ", " << "position=" << p.position;
+        os << ", " << "speed=" << p.speed;
+        os << ", " << "force=" << p.force;
+        os << ", " << "mass=" << p.mass;
+        os << "}";
+        return os;
+    }
+
 };
 
 typedef Particle<2> Particle2D;

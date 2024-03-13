@@ -44,12 +44,12 @@ public:
 
     /// @brief Euclidian norm of the current vector
     inline double euclidianNorm() {
-        return std::sqrt(this->euclidianDistanceSquared());
+        return std::sqrt(this->euclidianNormSquared());
     }
 
     /// @brief Squared Euclidian distance between two vectors
     double euclidianDistanceSquared(const Vector<N> & v) const {
-        return (this - v).euclidianNormSquared();
+        return (*this - v).euclidianNormSquared();
     }
 
     /// @brief Euclidian distance between this vector and another one
@@ -57,19 +57,32 @@ public:
         return std::sqrt(this->euclidianDistanceSquared(v));
     }
     
-    /// @brief Normalizes this vector
-    void normalize() {
+    /// @brief Normalizes this vector if it is not zero
+    void normalizeOrZero() {
         double norm = this->euclidianNorm();
-        if (norm == 0.0) {
-            throw std::invalid_argument("Cannot normalize a null vector");
-        } 
-        this /= this->euclidianNorm();
+        if (norm != 0.0) {
+            *this /= this->euclidianNorm();
+        }
+        
     } 
 
     /// @brief Sets all of this vector's coordinates to 0
     void zero() {
         for (auto &coord: this->coords) {
             coord = 0;
+        }
+
+    }
+
+    /// @brief Copies another vector's value into ours
+    void copy(const Vector<N> & v) {
+        auto ours = this->coords.begin();
+        auto other = v.coords.begin();
+
+        while (ours != this->coords.end()) {
+            *ours = *other;
+            ++ours;
+            ++other;
         }
 
     }
@@ -114,7 +127,7 @@ public:
 
     /// @brief Addition of two same sized vectors 
     /// @param v The vector to add that one with
-    void operator+(const Vector<N> & v) const {
+    Vector<N> operator+(const Vector<N> & v) const {
         auto ret = Vector(*this);
         ret += v;
         return ret;
@@ -159,6 +172,18 @@ public:
     /// @brief Multiplication of a scalar by a vector
     friend Vector<N> operator*(double x, const Vector<N> &v) {
         return v * x;
+    }
+
+    void operator/=(double x) {
+        for (auto &coord: this->coords) {
+            coord /= x;
+        }
+    }
+
+    Vector<N> operator/(double x) {
+        Vector<N> v(*this);
+        v /= x;
+        return v;
     }
 
     /// @brief Outputs the vector to the provided stream

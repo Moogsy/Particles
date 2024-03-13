@@ -1,43 +1,66 @@
 #include <vector>
-#include <stdio.h>
 
 #include "particle.hxx"
 #include "vector.hxx"
 
-template<std::size_t N>
-Vector<N> attractionForce(const Particle<N> & current, const Particle<N> & other) {
-    Vector<N> ltr = other - current;
-    double distSquared = ltr.euclidianDistanceSquared();
-
-    ltr.normalize();
-
-    ltr *= current.getMass() * other.getMass() / distSquared;
-
-    return ltr;
-}
+#define T_END 468.5
+#define DELTA_T 0.015
 
 template<std::size_t N>
-void stromerVerletInit(std::vector<Particle<N>> particles) {
+void stromerVerletInit(std::vector<Particle<N>> &particles) {
 
-    for (auto current: particles) {
-        Vector<N> & force = current.getForce();
-        force.zero();
+    for (Particle<N> &curr: particles) {
+        curr.force.zero();
 
-        for (auto other: particles) {
-            if (current == other) {
+        for (Particle<N> &other: particles) {
+            if (curr == other) {
                 continue;
             }
-            force += attractionForce(current, other);
+            Vector<N> f = other.position - curr.position;
+            double norm = f.euclidianNorm();
+            f *= curr.mass * other.mass / (norm * norm * norm);
+            curr.force += f;
         }
     }
+}
+
+template <std::size_t N>
+void stromerVerletOutput(std::vector<Particle<N>> particles, double t) {
+        std::cout << "# t = " << t << std::endl;
+        for (Particle<N> &p: particles) {
+            Vector<N> &v = p.position;
+            std::cout << v[0] << " " << v[1] << std::endl;
+        }
+        std::cout << std::endl;
+        std::cout << std::endl;
+
 }
 
 template<std::size_t N>
 void stromerVerlet(
     std::vector<Particle<N>> particles,
-    std::vector<Vector<N>> oldForces
+    std::vector<Vector<N>> oldForces,
+    double deltaT,
+    double tEnd
 ) {
     stromerVerletInit(particles);
+    for (double t = 0.0; t < tEnd; t += deltaT) {
+
+        for (std::size_t i = 0; i < particles.size(); ++i) {
+            Particle<N> &p = particles[i];
+            p.position += deltaT * (p.speed + (0.5 / p.mass) * deltaT * p.force);
+            oldForces[i] = p.force;
+        }
+        stromerVerletInit(particles);
+
+        for (std::size_t i = 0; i < particles.size(); ++i) {
+            Particle<N> &p = particles[i];
+            p.speed += deltaT * (0.5 / p.mass) * (p.force + oldForces[i]);
+        }
+
+        stromerVerletOutput(particles, t);
+
+    }
 }
 
 int main() {
@@ -72,5 +95,10 @@ int main() {
         )
     };
 
-    std::cout << particles[1].getPosition().euclidianNormSquared() << std::endl;
+    std::vector<Vector2D> oldForces;
+    for (std::size_t i = 0; i < particles.size(); ++i) {
+        oldForces.push_back(Vector2D());
+    }
+
+    stromerVerlet(particles, oldForces, DELTA_T, T_END);
 }
