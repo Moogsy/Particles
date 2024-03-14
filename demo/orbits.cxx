@@ -10,28 +10,28 @@ template<std::size_t N>
 void stromerVerletInit(std::vector<Particle<N>> &particles) {
 
     for (Particle<N> &curr: particles) {
-        curr.force.zero();
+        curr.getForceMut().zero();
 
         for (Particle<N> &other: particles) {
             if (curr == other) {
                 continue;
             }
-            Vector<N> f = other.position - curr.position;
+            Vector<N> f = other.readPosition() - curr.readPosition();
             double norm = f.euclidianNorm();
-            f *= curr.mass * other.mass / (norm * norm * norm);
-            curr.force += f;
+            f *= curr.getMass() * other.getMass() / (norm * norm * norm);
+            curr.getForceMut() += f;
         }
     }
 }
 
 template <std::size_t N>
 void stromerVerletOutput(std::vector<Particle<N>> particles, double t) {
-        std::cout << "# t = " << t << std::endl;
-        for (Particle<N> &p: particles) {
-            Vector<N> &v = p.position;
-            std::cout << v[0] << " " << v[1] << std::endl;
+        std::cout << "# t = " << t << "\n";
+        for (const Particle<N> &p: particles) {
+            const Vector<N> &v = p.readPosition();
+            std::cout << v[0] << " " << v[1] << "\n";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
         std::cout << std::endl;
 
 }
@@ -48,14 +48,14 @@ void stromerVerlet(
 
         for (std::size_t i = 0; i < particles.size(); ++i) {
             Particle<N> &p = particles[i];
-            p.position += deltaT * (p.speed + (0.5 / p.mass) * deltaT * p.force);
-            oldForces[i] = p.force;
+            p.getPositionMut() += deltaT * (p.readSpeed() + (0.5 / p.readMass()) * deltaT * p.readForce());
+            oldForces[i] = p.readForce();
         }
         stromerVerletInit(particles);
 
         for (std::size_t i = 0; i < particles.size(); ++i) {
             Particle<N> &p = particles[i];
-            p.speed += deltaT * (0.5 / p.mass) * (p.force + oldForces[i]);
+            p.getSpeedMut() += deltaT * (0.5 / p.readMass()) * (p.readForce() + oldForces[i]);
         }
 
         stromerVerletOutput(particles, t);

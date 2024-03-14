@@ -109,6 +109,13 @@ public:
         return this->coords[index];
     }
 
+    double operator[](std::size_t index) const {
+        if (index < 0 || index >= N) {
+            throw std::out_of_range("Index out of range");
+        }
+        return this->coords[index];
+    }
+
     /* Arithmetic operations*/
 
     /// @brief In place addition of two same sized vectors
