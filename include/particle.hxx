@@ -8,9 +8,12 @@ private:
     Vector<N> speed;
     Vector<N> force;
     double mass;
-    std::string identifier;
     std::string category;
 public:
+    std::string identifier;
+
+    Particle() = default;
+
     Particle(
         std::string identifier,
         std::string category,
