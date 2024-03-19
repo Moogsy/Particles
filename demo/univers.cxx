@@ -1,5 +1,6 @@
 #include "particle.hxx"
 #include "vector.hxx"
+#include "univers.hxx"
 #include <random>
 #include <vector>
 #include <cmath>
@@ -24,10 +25,14 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
 
 
 int main() {
-    std::vector<Particle3D> particles;
-    const std::size_t totalNumberParticules = std::pow(std::pow(2,5),3);
+    constexpr std::size_t N = 3;
+    std::vector<Particle<N>> particles;
+    const std::size_t totalNumberParticules = 50;
     randomParts(particles,totalNumberParticules);
+    Univers<N> universe(particles,2000,30);
+    universe.init();
     //universe.step(); 
+    std::cout << universe << std::endl;    
     return 0;
 }
 

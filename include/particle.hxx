@@ -74,6 +74,18 @@ public:
             this->category == p.category
         );
     }
+
+    friend std::ostream& operator<<(std::ostream &os, const Particle & p) {
+    os << "Particule{";
+    os << "position=" << p.position;
+    os << ", " << "vitesse=" << p.speed;
+    os << ", " << "force=" << p.force;
+    os << ", " << "masse=" << p.mass;
+    os << ", " << "identifiant=" << p.identifier; 
+    os << "}";
+
+    return os; 
+}
 };
 
 typedef Particle<2> Particle2D;
