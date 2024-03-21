@@ -23,13 +23,11 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
     }
 }
 
-
 int main() {
-    constexpr std::size_t N = 3;
-    std::vector<Particle<N>> particles;
+    std::vector<Particle3D> particles;
     const std::size_t totalNumberParticules = 50;
     randomParts(particles,totalNumberParticules);
-    Univers<N> universe(particles,2000,30);
+    Univers3D universe(particles,2000,30);
     universe.init();
     //universe.step(); 
     std::cout << universe << std::endl;    

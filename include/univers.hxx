@@ -80,5 +80,5 @@ public:
 // template <std::size_t N>
 // std::vector<Particle<N>> Univers<N>::particles; 
 
-// typedef Univers<2> Univers2D;
-// typedef Univers<3> Univers3D;
+typedef Univers<2> Univers2D;
+typedef Univers<3> Univers3D;

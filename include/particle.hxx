@@ -66,26 +66,21 @@ public:
     /* Operations */
     const bool operator==(const Particle<N> & p) const {
         return (
-            this->position == p.position &&
-            this->speed == p.speed &&
-            this->force == p.force &&
-            this->mass == p.mass &&
             this->identifier == p.identifier &&
             this->category == p.category
         );
     }
 
     friend std::ostream& operator<<(std::ostream &os, const Particle & p) {
-    os << "Particule{";
-    os << "position=" << p.position;
-    os << ", " << "vitesse=" << p.speed;
-    os << ", " << "force=" << p.force;
-    os << ", " << "masse=" << p.mass;
-    os << ", " << "identifiant=" << p.identifier; 
-    os << "}";
-
-    return os; 
-}
+        os << "Particule{";
+        os << "position=" << p.position;
+        os << ", " << "vitesse=" << p.speed;
+        os << ", " << "force=" << p.force;
+        os << ", " << "masse=" << p.mass;
+        os << ", " << "identifiant=" << p.identifier; 
+        os << "}";
+        return os; 
+    }
 };
 
 typedef Particle<2> Particle2D;
