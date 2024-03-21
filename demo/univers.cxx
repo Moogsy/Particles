@@ -9,7 +9,7 @@ template <std::size_t N>
 void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_real_distribution<double> dist(0.0, 5.0);
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
 
     for (std::size_t i = 0; i < pCount; ++i) {
         Particle<N> p;
@@ -25,13 +25,13 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
 
 int main() {
     std::vector<Particle3D> particles;
-    const std::size_t totalNumberParticules = 4;
+    const std::size_t totalNumberParticules = 50;
     randomParts(particles,totalNumberParticules);
-    Univers3D universe(particles, 1e-4);
+    Univers3D universe(particles, 1e-3);
 
     universe.init();
 
-    for(int i = 0; i < 20; ++i){
+    for(int i = 0; i < 2000; ++i){
         universe.step(); 
         universe.output();
     }

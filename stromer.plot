@@ -6,5 +6,5 @@ blocks = STATS_blocks
 set xrange[-40:40]
 set yrange[-10:10]
 do for [n=0:blocks-1:100]{
-    plot "output.txt" i n with points notitle pt 7
+    plot "output.txt" i n with points notitle pt 7 linecolor palette
 }
