@@ -1,46 +1,46 @@
- #include <vector>
- #include "particle.hxx"
+#pragma once
 
- template <std::size_t N>
- class Univers {
+#include <iostream>
+#include <vector>
+#include "particle.hxx"
 
- private:
-     static std::vector<Particle<N>> particles;
-     std::vector<Vector<N>> oldForces;
-     std::size_t totalParticles;
-     double tEnd;
-     double deltaT;
- public:
-     Univers(
-         std::vector<Particle<N>> particles,
-         double tEnd,
-         double deltaT
-     ) {
-         this->totalParticles = particles.size();
-         this->particles = particles;
-         this->oldForces = std::vector<Vector<N>>();
-                  for (auto _: particles) {
-      this->oldForces.push_back(Vector<N>());}
+template <std::size_t N>
+class Univers {
 
-      this->tEnd = tEnd;
-        this->deltaT = deltaT;}
- 
+private:
+    std::vector<Particle<N>> particles;
+    std::vector<Vector<N>> oldForces;
+    std::size_t totalParticles;
+    double tEnd;
+    double deltaT;
+public:
+    Univers(
+        std::vector<Particle<N>> particles,
+        double tEnd,
+        double deltaT
+    ) {
+        this->totalParticles = particles.size();
+        this->particles = particles;
+        this->oldForces = std::vector<Vector<N>>();
+        for (auto _: particles) {
+            this->oldForces.push_back(Vector<N>());
+        }
+
+        this->tEnd = tEnd;
+        this->deltaT = deltaT;
+    }
 
     friend std::ostream& operator<<(std::ostream &os, const Univers<N> &u) {
-    std::size_t last = u.particles.size() - 1;
+        std::size_t last = u.particles.size() - 1;
 
-    os << "Univers{";
-    for (std::size_t i = 0; i < last; ++i) {
-        os << u.particles[i] << ", ";
+        os << "Univers{";
+        for (std::size_t i = 0; i < last; ++i) {
+            os << u.particles[i] << ", ";
+        }
+        os << u.particles[last] << "}";
+
+        return os;
     }
-    os << u.particles[last] << "}";
-
-    return os;
-}
-
- 
-
-
 
     void init() {
         for (Particle<N> &curr: this->particles) {
@@ -77,8 +77,8 @@
     }
 };
 
-template <std::size_t N>
-std::vector<Particle<N>> Univers<N>::particles; 
+// template <std::size_t N>
+// std::vector<Particle<N>> Univers<N>::particles; 
 
 // typedef Univers<2> Univers2D;
 // typedef Univers<3> Univers3D;
