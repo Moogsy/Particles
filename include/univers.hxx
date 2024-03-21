@@ -11,12 +11,11 @@ private:
     std::vector<Particle<N>> particles;
     std::vector<Vector<N>> oldForces;
     std::size_t totalParticles;
-    double tEnd;
+    double t;
     double deltaT;
 public:
     Univers(
         std::vector<Particle<N>> particles,
-        double tEnd,
         double deltaT
     ) {
         this->totalParticles = particles.size();
@@ -26,14 +25,12 @@ public:
             this->oldForces.push_back(Vector<N>());
         }
 
-        this->tEnd = tEnd;
+        this->t = 0.0;
         this->deltaT = deltaT;
     }
 
     friend std::ostream& operator<<(std::ostream &os, const Univers<N> &u) {
         std::size_t last = u.particles.size() - 1;
-
-        os << "Univers{";
         for (std::size_t i = 0; i < last; ++i) {
             os << u.particles[i] << ", ";
         }
@@ -59,6 +56,7 @@ public:
     }
 
     void step() {
+        this->t += this->deltaT;
         for (std::size_t i = 0; i < particles.size(); ++i) {
             Particle<N> &p = particles[i];
 
@@ -75,6 +73,17 @@ public:
             p.getSpeedMut() += deltaT * (0.5 / p.readMass()) * (p.readForce() + this->oldForces[i]);
         }
     }
+
+    void output() {
+        std::cout << "# t = " << t << "\n";
+        for (const Particle<N> &p: particles) {
+            const Vector<N> &v = p.readPosition();
+            std::cout << v[0] << " " << v[1] << "\n";
+        }
+        std::cout << "\n";
+        std::cout << std::endl;
+
+}
 };
 
 // template <std::size_t N>
