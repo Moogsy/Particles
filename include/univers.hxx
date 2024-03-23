@@ -49,7 +49,7 @@ public:
                 }
                 Vector<N> f = other.readPosition() - curr.readPosition();
                 double norm = f.euclidianNorm();
-                f *= curr.getMass() * other.getMass() / (norm * norm * norm);
+                f *= (curr.getMass() * other.getMass()) / (norm * norm * norm);
                 curr.getForceMut() += f;
             }
         }
@@ -78,7 +78,7 @@ public:
         std::cout << "# t = " << t << "\n";
         for (const Particle<N> &p: particles) {
             const Vector<N> &v = p.readPosition();
-            std::cout << v[0] << " " << v[1] << " " << p.identifier<< "\n";
+            std::cout << v[0] << " " << v[1] << "\n";
         
         }
         std::cout << "\n";
