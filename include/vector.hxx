@@ -154,6 +154,19 @@ public:
         }
     }
 
+    bool isZero() const {
+        for (auto &coord: this->coords) {
+            if (coord != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Vector<N> operator-() const {
+        return Vector<N>() - *this;
+    }
+
     Vector<N> operator-(const Vector<N> & v) const {
         Vector<N> ret(*this);
         ret -= v;

@@ -40,17 +40,30 @@ public:
     }
 
     void init() {
-        for (Particle<N> &curr: this->particles) {
-            curr.getForceMut().zero();
+        std::vector<std::vector<Vector<N>>> v = std::vector<std::vector<Vector<N>>>(totalParticles, std::vector<Vector<N>>(totalParticles));
 
-            for (Particle<N> &other: particles) {
-                if (curr == other) {
+        for (size_t i = 0; i < this->particles.size(); i++) {
+            Particle<N> &curr = this->particles[i];
+            curr.getForceMut().zero();
+            for (size_t j = 0; j < this->particles.size(); j++) {
+                if (i == j) {
                     continue;
                 }
-                Vector<N> f = other.readPosition() - curr.readPosition();
-                double norm = f.euclidianNorm();
-                f *= (curr.getMass() * other.getMass()) / (norm * norm * norm);
-                curr.getForceMut() += f;
+                Particle<N> &other = this->particles[j];
+
+                if (v[i][j].isZero()) {
+
+                    Vector<N> f = other.readPosition() - curr.readPosition();
+                    double norm = f.euclidianNorm();
+                    f *= (curr.getMass() * other.getMass()) / (norm * norm * norm);
+
+                    v[i][j] = f;
+                    v[j][i] = -f;
+
+                    curr.getForceMut() += f;
+                } else {
+                    curr.getForceMut() += v[i][j];
+                }
             }
         }
     }
