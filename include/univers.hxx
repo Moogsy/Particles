@@ -52,10 +52,11 @@ public:
                 Particle<N> &other = this->particles[j];
 
                 if (v[i][j].isZero()) {
-
                     Vector<N> f = other.readPosition() - curr.readPosition();
-                    double norm = f.euclidianNorm();
-                    f *= (curr.getMass() * other.getMass()) / (norm * norm * norm);
+                    double normSquared = f.euclidianNormSquared();
+                    double norm = sqrt(normSquared);
+
+                    f *= (curr.getMass() * other.getMass()) / (normSquared * norm);
 
                     v[i][j] = f;
                     v[j][i] = -f;
