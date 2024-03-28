@@ -87,7 +87,7 @@ public:
         }
     }
 
-    void output() {
+    void output2D() {
         std::cout << "# t = " << t << "\n";
         for (const Particle<N> &p: particles) {
             const Vector<N> &v = p.readPosition();
@@ -98,7 +98,21 @@ public:
         std::cout << std::endl;
 
 }
+
+
+    void output3D() {
+        std::cout << "# t = " << t << "\n";
+        for (const Particle<N> &p: particles) {
+            const Vector<N> &v = p.readPosition();
+            std::cout << v[0] << " " << v[1] << " " << v[2] << " " << p.identifier <<"\n";
+        
+        }
+        std::cout << "\n";
+        std::cout << std::endl;
+
+}
 };
+
 
 // template <std::size_t N>
 // std::vector<Particle<N>> Univers<N>::particles; 
