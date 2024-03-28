@@ -62,6 +62,12 @@ public:
         return this->mass;
     }
 
+    double calculatePotential(Particle<N> & other){
+        Vector<N> dist_vec = readPosition - other.readPosition;
+        double norm = dist_vec.euclidianNorm();
+        double inversed_norm =(1/norm)**6;
+        return 4*inversed_norm*(inversed_norm-1)
+    }
 
     /* Operations */
     const bool operator==(const Particle<N> & p) const {
