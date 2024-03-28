@@ -13,7 +13,11 @@ private:
     std::size_t totalParticles;
     double t;
     double deltaT;
-public:
+    double charLength;
+    double cuttingRadius;
+    std::vector<std::vector<Particle<N>> cellsList; 
+    
+    public:
     Univers(
         std::vector<Particle<N>> particles,
         double deltaT
