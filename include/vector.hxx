@@ -75,16 +75,18 @@ public:
     }
 
     /// @brief Copies another vector's value into ours
-    void copy(const Vector<N> & v) {
+    Vector<N> copy() const {
+        Vector<N> ret;
         auto ours = this->coords.begin();
-        auto other = v.coords.begin();
+        auto other = ret.coords.begin();
 
         while (ours != this->coords.end()) {
-            *ours = *other;
+            *other = *ours;
             ++ours;
             ++other;
         }
 
+        return ret;
     }
 
     /* Comparison operations */

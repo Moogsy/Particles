@@ -27,15 +27,20 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
 }
 
 int main() {
-    std::vector<Particle3D> particles;
-    randomParts(particles, 1000);
-    Univers3D universe(particles, 5e-3);
-    universe.init();
 
-    for(int i = 0; i < 6000; ++i){
-        universe.step(); 
-        universe.output3D();
+    Univers3D uni(
+        100,
+        40,
+        1,
+        1,
+        1e-2
+   );
+
+    for (int i = 0; i < 10000; ++i) {
+        uni.step(); 
+        uni.output3D();
     }
+
     return 0;
 }
 
