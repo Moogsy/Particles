@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
 #include "particle.hxx"
 
 template <std::size_t N>
@@ -10,19 +11,20 @@ class Univers {
 private:
     std::vector<Particle<N>> particles;
     std::vector<Vector<N>> oldForces;
-    std::size_t totalParticles;
+    std::vector<double> speeds;
+
     double t;
     double deltaT;
     double charLength;
     double cuttingRadius;
-    std::vector<std::vector<Particle<N>> cellsList; 
+    std::vector<std::vector<Particle<N>>> cellsList; 
+
     
-    public:
+public:
     Univers(
         std::vector<Particle<N>> particles,
         double deltaT
     ) {
-        this->totalParticles = particles.size();
         this->particles = particles;
         this->oldForces = std::vector<Vector<N>>();
         for (auto _: particles) {
@@ -32,6 +34,42 @@ private:
         this->t = 0.0;
         this->deltaT = deltaT;
     }
+
+    Univers(
+        std::size_t pCount,
+        double maxPos,
+        double maxSpeed,
+        double commonMass,
+        double deltaT
+    ) {
+        std::random_device rd;
+        std::mt19937 mt(rd());
+        std::uniform_real_distribution<double> dist(-1.0, 1.0);
+        std::uniform_real_distribution<double> normDist(0.0, 1.0);
+
+        for (std::size_t i = 0; i < pCount; ++i) {
+            Particle<N> p;
+            p.identifier = std::to_string(i);
+            for (std::size_t j = 0; j < N; ++j) {
+                p.getPositionMut()[j] = dist(mt);
+                p.getSpeedMut()[j] = dist(mt);
+                p.getMass() = commonMass;
+            }
+
+            p.getPositionMut().normalizeOrZero();
+            p.getPositionMut() *= normDist(mt) * maxPos;
+
+            p.getForceMut().normalizeOrZero();
+            p.getPositionMut() *= normDist(mt) * maxSpeed;
+
+            this->particles.push_back(p);
+            this->oldForces.push_back(Vector<N>());
+            this->speeds.push_back(0);
+        }
+        this->deltaT = deltaT;
+    }
+
+
 
     friend std::ostream& operator<<(std::ostream &os, const Univers<N> &u) {
         std::size_t last = u.particles.size() - 1;
@@ -44,7 +82,12 @@ private:
     }
 
     void init() {
-        std::vector<std::vector<Vector<N>>> v = std::vector<std::vector<Vector<N>>>(totalParticles, std::vector<Vector<N>>(totalParticles));
+        std::vector<std::vector<Vector<N>>> v = std::vector<std::vector<Vector<N>>>(
+            this->particles.size(), 
+            std::vector<Vector<N>>(
+                this->particles.size()
+            )
+        );
 
         for (size_t i = 0; i < this->particles.size(); i++) {
             Particle<N> &curr = this->particles[i];
@@ -73,6 +116,9 @@ private:
         }
     }
 
+    void speedCorrection() {
+    }
+
     void step() {
         this->t += this->deltaT;
         for (std::size_t i = 0; i < particles.size(); ++i) {
@@ -81,7 +127,11 @@ private:
             Vector<N> deltaPos = (0.5 / p.readMass()) * deltaT * p.readForce();
             deltaPos += p.readSpeed();
 
+            Vector<N> oldPosition = p.readPosition().copy();
+
             p.getPositionMut() += deltaT * deltaPos;
+
+            this->speeds[i] = (p.readPosition() - oldPosition).euclidianNormSquared();
             this->oldForces[i] = p.readForce();
         }
         this->init();

@@ -28,7 +28,7 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
 
 int main() {
     std::vector<Particle3D> particles;
-    randomParts(particles, 60);
+    randomParts(particles, 1000);
     Univers3D universe(particles, 5e-3);
     universe.init();
 

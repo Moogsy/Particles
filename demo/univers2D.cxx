@@ -25,6 +25,7 @@ void randomParts(std::vector<Particle<N>> & parts, std::size_t pCount) {
 }
 
 int main() {
+    /*
     std::vector<Particle2D> particles {
         Particle2D("Sun", "star", Vector2D(), Vector2D(), 1.0),
         Particle2D("Earth", "planet", Vector2D{0, 1}, Vector2D{-1, 0}, 3e-6),
@@ -35,14 +36,25 @@ int main() {
         Particle2D("Uranus", "planet", Vector2D{16.22, 0}, Vector2D{0, 0.3}, 4.4e-4),
         Particle2D("Neptune", "planet", Vector2D{25.05, 0}, Vector2D{0, 0.4}, 5.15e-5),
     };
-    randomParts(particles, 50);
-    Univers2D universe(particles, 5e-3);
-    universe.init();
 
-    for(int i = 0; i < 6000; ++i){
-        universe.step(); 
-        universe.output2D();
+    // randomParts(particles, 50);
+    Univers2D universe(particles, 1e-3);
+    universe.init();
+    */
+
+   Univers2D uni(
+        100,
+        40,
+        1,
+        1,
+        1e-2
+   );
+
+    for (int i = 0; i < 10000; ++i) {
+        uni.step(); 
+        uni.output2D();
     }
+
     return 0;
 }
 
