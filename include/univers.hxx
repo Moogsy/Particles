@@ -15,15 +15,17 @@ private:
 
     double t;
     double deltaT;
-    double charLength;
+    Vector<N> charactesticLength;
     double cuttingRadius;
-    std::vector<std::vector<Particle<N>>> cellsList; 
+    // 2D only 
+    std::vector<std::vector<Particle<2>>> cellsList; 
 
-    
 public:
     Univers(
         std::vector<Particle<N>> particles,
-        double deltaT
+        double deltaT,
+        double charLength,
+        double cuttingRadius
     ) {
         this->particles = particles;
         this->oldForces = std::vector<Vector<N>>();
@@ -33,6 +35,11 @@ public:
 
         this->t = 0.0;
         this->deltaT = deltaT;
+        for (std::size_t i = 0; i < 2; ++i){
+        size_t numberCells =  floor(characteristicLength[i]/cuttingRadius);
+
+        }
+
     }
 
     Univers(
@@ -116,8 +123,7 @@ public:
         }
     }
 
-    void speedCorrection() {
-    }
+   
 
     void step() {
         this->t += this->deltaT;
