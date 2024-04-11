@@ -12,13 +12,15 @@ private:
     std::vector<Particle<N>> particles;
     std::vector<Vector<N>> oldForces;
     std::vector<double> speeds;
+    std::vector<double> dimensions;
 
     double t;
     double deltaT;
     Vector<N> charactesticLength;
     double cuttingRadius;
     // 2D only 
-    std::vector<std::vector<Particle<2>>> cellsList; 
+    std::vector<std::vector<Particle<2>>> cellsList;
+
 
 public:
     Univers(
@@ -36,8 +38,8 @@ public:
         this->t = 0.0;
         this->deltaT = deltaT;
         for (std::size_t i = 0; i < 2; ++i){
-        size_t numberCells =  floor(characteristicLength[i]/cuttingRadius);
-
+            size_t numberCells =  floor(characteristicLength[i]/cuttingRadius);
+            dimensions.push_back(numberCells);
         }
 
     }
