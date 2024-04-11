@@ -12,13 +12,15 @@ private:
     std::vector<Particle<N>> particles;
     std::vector<Vector<N>> oldForces;
     std::vector<double> speeds;
+    std::vector<double> dimensions;
 
     double t;
     double deltaT;
     Vector<N> charactesticLength;
     double cuttingRadius;
     // 2D only 
-    std::vector<std::vector<Particle<2>>> cellsList; 
+    std::vector<std::vector<Particle<2>>> cellsList;
+
 
 public:
     Univers(
