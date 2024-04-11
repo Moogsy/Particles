@@ -36,7 +36,7 @@ public:
         this->t = 0.0;
         this->deltaT = deltaT;
         for (std::size_t i = 0; i < 2; ++i){
-        size_t numberCells =  floor(characteristicLength[i]/cuttingRadius);
+        // size_t numberCells =  floor(characteristicLength[i]/cuttingRadius);
 
         }
 
